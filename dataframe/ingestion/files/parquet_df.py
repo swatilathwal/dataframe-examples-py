@@ -2,8 +2,6 @@ from pyspark.sql import SparkSession
 from pyspark.sql.window import Window
 from pyspark.sql import functions as F
 from pyspark.sql.types import IntegerType
-import pyarrow as pa
-import pyarrow.parquet as pq
 import os.path
 import yaml
 
@@ -35,14 +33,6 @@ if __name__ == '__main__':
     print("\nCreating dataframe ingestion parquet file using 'SparkSession.read.parquet()',")
     nyc_omo_df = spark.read \
         .parquet("s3a://" + app_conf["s3_conf"]["s3_bucket"] + "/test")
-
-    pdf = nyc_omo_df.toPandas()
-    adf = pa.Table.from_pandas(pdf)  # import pyarrow as pa
-    fs = pa.hdfs.connect()
-    fw = fs.open(path, 'wb')
-    pq.write_table(adf, fw)  # import pyarrow.parquet as pq
-    fw.close()
-
 
     print("# of records = " + str(nyc_omo_df.count()))
     print("# of partitions = " + str(nyc_omo_df.rdd.getNumPartitions))
