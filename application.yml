@@ -1,5 +1,5 @@
 s3_conf:
-  s3_bucket: test-spark-test
+  s3_bucket: lathwalbucket
 
 sftp_conf:
     filetype: csv
