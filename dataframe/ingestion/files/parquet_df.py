@@ -30,7 +30,7 @@ if __name__ == '__main__':
     hadoop_conf.set("fs.s3a.secret.key", app_secret["s3_conf"]["secret_access_key"])
     print(app_conf["s3_conf"]["s3_bucket"] + "/NYC_OMO")
     print("\nCreating dataframe ingestion parquet file using 'SparkSession.read.parquet()',")
-    nyc_omo_df = spark.read \
+    nyc_omo_df = sqlc.read \
         .parquet("s3a://" + app_conf["s3_conf"]["s3_bucket"] + "/test")
 
 
