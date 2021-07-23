@@ -2,6 +2,9 @@ from pyspark.sql import SparkSession
 from pyspark.sql.window import Window
 from pyspark.sql import functions as F
 from pyspark.sql.types import IntegerType
+import pandas as pd
+import pyarrow as pa
+import pyarrow.parquet as pq
 import os.path
 import yaml
 
@@ -24,14 +27,22 @@ if __name__ == '__main__':
     secret = open(app_secrets_path)
     app_secret = yaml.load(secret, Loader=yaml.FullLoader)
 
+
     # Setup spark to use s3
     hadoop_conf = spark.sparkContext._jsc.hadoopConfiguration()
     hadoop_conf.set("fs.s3a.access.key", app_secret["s3_conf"]["access_key"])
     hadoop_conf.set("fs.s3a.secret.key", app_secret["s3_conf"]["secret_access_key"])
     print(app_conf["s3_conf"]["s3_bucket"] + "/NYC_OMO")
     print("\nCreating dataframe ingestion parquet file using 'SparkSession.read.parquet()',")
-    nyc_omo_df = sqlc.read \
+    nyc_omo_df = spark.read \
         .parquet("s3a://" + app_conf["s3_conf"]["s3_bucket"] + "/test")
+
+    pdf = nyc_omo_df.toPandas()
+    adf = pa.Table.from_pandas(pdf)  # import pyarrow as pa
+    fs = pa.hdfs.connect()
+    fw = fs.open(path, 'wb')
+    pq.write_table(adf, fw)  # import pyarrow.parquet as pq
+    fw.close()
 
 
     print("# of records = " + str(nyc_omo_df.count()))
