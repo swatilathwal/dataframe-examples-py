@@ -2,7 +2,6 @@ from pyspark.sql import SparkSession
 from pyspark.sql.window import Window
 from pyspark.sql import functions as F
 from pyspark.sql.types import IntegerType
-import pandas as pd
 import pyarrow as pa
 import pyarrow.parquet as pq
 import os.path
