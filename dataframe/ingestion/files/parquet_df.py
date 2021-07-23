@@ -32,7 +32,7 @@ if __name__ == '__main__':
     print("\nCreating dataframe ingestion parquet file using 'SparkSession.read.parquet()',")
     nyc_omo_df = spark.read \
         .parquet("s3a://" + app_conf["s3_conf"]["s3_bucket"] + "/test") \
-        .repartition(5)
+        .repartition(1)
 
     print("# of records = " + str(nyc_omo_df.count()))
     print("# of partitions = " + str(nyc_omo_df.rdd.getNumPartitions))
