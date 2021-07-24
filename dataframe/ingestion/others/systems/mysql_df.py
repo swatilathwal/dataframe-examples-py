@@ -39,14 +39,12 @@ if __name__ == '__main__':
 
     # use the ** operator/un-packer to treat a python dictionary as **kwargs
     print("\nReading data from MySQL DB using SparkSession.read.format(),")
-    for query in app_conf["mysql_conf"]["query_list"]:
-        jdbc_params['dbtable'] = query
-        print('Query:', query)
-        txnDF = spark \
-            .read.format("jdbc") \
-            .option("driver", "com.mysql.cj.jdbc.Driver") \
-            .options(**jdbc_params) \
-            .load()
+
+    txnDF = spark \
+        .read.format("jdbc") \
+        .option("driver", "com.mysql.cj.jdbc.Driver") \
+        .options(**jdbc_params) \
+        .load()
 
     txnDF.show()
 
